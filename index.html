@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./themify-icons/themify-icons.css">
+    <title>Product Filter</title>
+</head>
+<body>
+    <div class="app">
+        <div class="container">
+            <div class="header_container">
+                <h3 class="heading_container">Live Product Filter</h3>
+                <div class="heading_search">
+                    <i class="ti-search"></i>
+                    <input class="heading_input" type="text" placeholder="Tìm sản phẩm mong muốn" >
+                </div>
+            </div>
+            <div class="body_container">
+                    <div class="body_item">
+                        <h3 class="body_title">Đang tải sản phẩm vui lòng đợi...</h3>
+                    </div>
+                    <div class="body_item">
+                        <h3 class="body_title">Please wait a moment loading products... </h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        let bodyContainerE = document.querySelector('.body_container')
+        let inputE = document.querySelector('.heading_input')
+        fetch('https://fakestoreapi.com/products')
+                            .then(function(respon){
+                                return respon.json()
+                            })
+                            .then(function(data){
+                                getProducts(data)
+                            })
+        function getProducts(data){
+            let dataLength = data.length
+            bodyContainerE.innerHTML =''
+            for(let i = 0; i<dataLength; i++){
+                let product = data[i]
+                bodyContainerE.innerHTML += 
+                    `<div class="body_item">
+                        <img src=${product.image} alt="" class="body_image">
+                        <div class="body_content">
+                            <h3 class="body_title">${product.title}</h3>
+                            <span class="body_price">${product.price}</span>
+                        </div>
+                    </div>`
+            }
+            let bodyItemEs = document.querySelectorAll('.body_item')
+            inputE.oninput=function(){
+                let searchTxt = inputE.value.trim().toLowerCase()
+                let bodyItemEsLength = bodyItemEs.length
+                for(let i =0; i<bodyItemEsLength; i++){
+                    let bodyItemE = bodyItemEs[i]
+                    if(!bodyItemE.innerText.toLowerCase().includes(searchTxt)){
+                        bodyItemE.classList.add('hide')
+                    }else{
+                        bodyItemE.classList.remove('hide')
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
